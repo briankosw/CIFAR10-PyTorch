@@ -1,1 +1,6 @@
+dataset_dir: ~
+train_pct: 0.1
+batch_size: ~
+shuffle: True
+pin_memory: True
 stage: fit
