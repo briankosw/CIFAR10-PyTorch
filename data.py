@@ -10,6 +10,11 @@ import pickle
 import torch
 from torch.utils.data import DataLoader, Dataset, random_split
 from torchvision.datasets import CIFAR10
+import torchvision.transforms as transforms
+
+NUM_CLASSES = 10
+CIFAR10_MEAN = [0.4914, 0.4822, 0.4465]
+CIFAR10_STD = [0.2470, 0.2435, 0.2616]
 
 
 class CIFAR10DataModule(pl.LightningDataModule):
@@ -39,19 +44,35 @@ class CIFAR10DataModule(pl.LightningDataModule):
 
     def setup(self, stage: Optional[str] = None):
         if stage == "fit" or stage is None:
-            dataset = CIFAR10(self.dataset_dir, train=True, transform=self.transforms)
+            dataset = CIFAR10(
+                self.dataset_dir,
+                train=True,
+                transform=transforms.Compose(
+                    [
+                        transforms.ToTensor(),
+                        transforms.Normalize(CIFAR10_MEAN, CIFAR10_STD),
+                    ]
+                ),
+            )
             num_train = int(len(dataset) * self.train_pct)
             num_val = len(dataset) - num_train
             generator = None
             if self.seed is not None:
                 generator = torch.Generator().manual_seed(self.seed)
-            self.train_datset, self.val_dataset = random_split(
+            self.train_dataset, self.val_dataset = random_split(
                 dataset, lengths=[num_train, num_val], generator=generator
             )
 
         if stage == "evaluate" or stage is None:
             self.test_dataset = CIFAR10(
-                self.dataset_dir, train=False, transform=self.transforms
+                self.dataset_dir,
+                train=False,
+                transform=transforms.Compose(
+                    [
+                        transforms.ToTensor(),
+                        transforms.Normalize(CIFAR10_MEAN, CIFAR10_STD),
+                    ]
+                ),
             )
 
     def train_loader(self):
