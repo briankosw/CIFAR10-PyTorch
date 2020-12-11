@@ -7,6 +7,7 @@ from data import CIFAR10DataModule
 
 @hydra.main(config_name="evaluate")
 def main(cfg: DictConfig):
+    model = None
     datamodule = CIFAR10DataModule(
         cfg.dataset_dir,
         cfg.train_pct,
@@ -16,8 +17,8 @@ def main(cfg: DictConfig):
         cfg.pin_memory,
         cfg.seed,
     )
-    dm.prepare(cfg.stage)
-    dm.setup(cfg.stage)
+    datamodule.prepare(cfg.stage)
+    datamodule.setup(cfg.stage)
     trainer = pl.Trainer()
     trainer.test(model, datamodule=datamodule)
 
