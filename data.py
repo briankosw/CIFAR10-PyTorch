@@ -23,7 +23,6 @@ class CIFAR10DataModule(pl.LightningDataModule):
         dataset_dir: str,
         train_pct: float,
         batch_size: int,
-        shuffle: bool = False,
         num_workers: int = 0,
         pin_memory: bool = False,
         seed: Optional[int] = None,
@@ -31,7 +30,6 @@ class CIFAR10DataModule(pl.LightningDataModule):
         self.dataset_dir = dataset_dir
         self.train_pct = train_pct
         self.batch_size = batch_size
-        self.shuffle = shuffle
         self.num_workers = num_workers
         self.pin_memory = pin_memory
         self.seed = seed
@@ -79,7 +77,7 @@ class CIFAR10DataModule(pl.LightningDataModule):
         return DataLoader(
             self.train_dataset,
             self.batch_size,
-            self.shuffle,
+            shuffle=True,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
         )
@@ -88,7 +86,7 @@ class CIFAR10DataModule(pl.LightningDataModule):
         return DataLoader(
             self.val_dataset,
             self.batch_size,
-            self.shuffle,
+            shuffle=False,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
         )
@@ -97,7 +95,7 @@ class CIFAR10DataModule(pl.LightningDataModule):
         return DataLoader(
             self.test_dataset,
             self.batch_size,
-            self.shuffle,
+            shuffle=False,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
         )

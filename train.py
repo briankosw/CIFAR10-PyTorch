@@ -1,12 +1,20 @@
+import random
+
 import hydra
+import numpy as np
 from omegaconf import DictConfig
 import pytorch_lightning as pl
+import torch
 
 from data import CIFAR10DataModule
 
 
 @hydra.main(config_name="train")
 def main(cfg: DictConfig):
+    if cfg.seed is not None:
+        random.seed(cfg.seed)
+        np.random.seed(cfg.seed)
+        torch.manual_seed(cfg.seed)
     model = None
     datamodule = CIFAR10DataModule(
         cfg.dataset_dir,

@@ -1,6 +1,6 @@
 dataset_dir: ~
-train_pct: 0.1
+train_pct: 0.9
 batch_size: ~
-shuffle: True
 pin_memory: True
+seed: 61820
 stage: fit
